@@ -33,6 +33,7 @@ import Toast from './components/Toast';
 import ProductPage from './components/ProductPage';
 import LiveOrderNotifications from './components/LiveOrderNotifications';
 import PromoTimerAd from './components/PromoTimerAd';
+import CheckoutModal from './components/CheckoutModal';
 
 export { productsData }; // export data for notifications
 
@@ -42,6 +43,9 @@ export default function App() {
 
   // --- Active Product Stand-alone Page View ---
   const [activeProduct, setActiveProduct] = useState<Product | null>(null);
+
+  // --- Checkout Product ---
+  const [checkoutProduct, setCheckoutProduct] = useState<Product | null>(null);
 
   // --- Persistent States ---
   const [cart, setCart] = useState<CartItem[]>(() => {
@@ -133,16 +137,7 @@ export default function App() {
   };
 
   const handleBuyNow = (product: Product) => {
-    setCart((prev) => {
-      const existing = prev.find((item) => item.product.id === product.id);
-      if (existing) {
-        return prev;
-      }
-      return [...prev, { product, quantity: 1 }];
-    });
-    setCartDrawerStep('checkout');
-    setCartOpen(true);
-    triggerToast(`Added ${product.name} and opened checkout! 🚀`);
+    setCheckoutProduct(product);
   };
 
   // --- Wishlist Handlers ---
@@ -656,6 +651,19 @@ export default function App() {
           />
         )}
       </AnimatePresence>
+
+      {/* Premium Shopify-style Checkout Modal */}
+      {checkoutProduct && (
+        <CheckoutModal
+          isOpen={!!checkoutProduct}
+          onClose={() => setCheckoutProduct(null)}
+          product={checkoutProduct}
+          onOrderSuccess={(name, phone, address, city, grandTotal) => {
+            setCheckoutProduct(null);
+            triggerToast(`Zabardast! Order of ${checkoutProduct.name} placed successfully for ${name}. 🚀`);
+          }}
+        />
+      )}
 
       {/* Live Recent Purchase Booking Notifications */}
       <LiveOrderNotifications products={productsList} />

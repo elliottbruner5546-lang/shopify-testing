@@ -39,6 +39,7 @@ export interface Product {
   gradientTo: string;
   reviews: Review[];
   image?: string;
+  images?: string[];
 }
 
 export interface CartItem {

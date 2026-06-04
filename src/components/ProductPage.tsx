@@ -10,7 +10,9 @@ import {
   MessageSquare, 
   CheckCircle2, 
   Plus, 
-  AlertCircle
+  AlertCircle,
+  ChevronLeft,
+  ChevronRight
 } from 'lucide-react';
 import { Product, Review } from '../types';
 import { formatPKR, calculateDiscount } from '../utils';
@@ -45,6 +47,8 @@ export default function ProductPage({
   const [reviewError, setReviewError] = useState('');
   const [reviewSuccess, setReviewSuccess] = useState(false);
 
+  const [activeSlide, setActiveSlide] = useState(0);
+
   // Scroll window to top on mount or product change
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -53,7 +57,24 @@ export default function ProductPage({
     setReviewName('');
     setReviewText('');
     setReviewRating(5);
+    setActiveSlide(0);
   }, [product.id]);
+
+  const slideImages = product.images && product.images.length > 0
+    ? product.images
+    : (product.image ? [product.image] : []);
+
+  const nextSlide = () => {
+    if (slideImages.length > 1) {
+      setActiveSlide((prev) => (prev + 1) % slideImages.length);
+    }
+  };
+
+  const prevSlide = () => {
+    if (slideImages.length > 1) {
+      setActiveSlide((prev) => (prev - 1 + slideImages.length) % slideImages.length);
+    }
+  };
 
   const discount = calculateDiscount(product.originalPrice, product.price);
 
@@ -139,16 +160,21 @@ export default function ProductPage({
         {/* Top Product Detail layout Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 md:gap-12 items-start relative z-10">
           
-          {/* Left Column: Premium Visual Container */}
+          {/* Left Column: Premium Visual Container / Slider */}
           <div className="lg:col-span-5 flex flex-col gap-4">
             <div className="relative aspect-square rounded-2xl bg-gradient-to-br from-[#0c1421] to-[#121d2e] border border-gray-800/80 flex items-center justify-center overflow-hidden shadow-inner group">
               <div className={`absolute w-44 h-44 rounded-full filter blur-3xl opacity-25 bg-gradient-to-tr ${product.gradientFrom} ${product.gradientTo}`} />
               
-              {product.image ? (
-                <img
-                  src={product.image}
-                  alt={product.name}
-                  className="w-full h-full object-cover relative z-10 transition-transform duration-300 group-hover:scale-105"
+              {/* Slide image rendering */}
+              {slideImages.length > 0 ? (
+                <motion.img
+                  key={activeSlide}
+                  initial={{ opacity: 0, scale: 0.96 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.25, ease: 'easeOut' }}
+                  src={slideImages[activeSlide]}
+                  alt={`${product.name} - Slide ${activeSlide + 1}`}
+                  className="w-full h-full object-cover relative z-10 select-none pointer-events-none"
                   referrerPolicy="no-referrer"
                 />
               ) : (
@@ -163,7 +189,74 @@ export default function ProductPage({
                   {product.badge}
                 </span>
               )}
+
+              {/* Slider Edge Navigation Controls */}
+              {slideImages.length > 1 && (
+                <>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      prevSlide();
+                    }}
+                    className="absolute left-3 top-1/2 -translate-y-1/2 w-9 h-9 flex items-center justify-center rounded-full bg-slate-900/70 backdrop-blur-sm border border-gray-850 hover:border-cyan-400 text-white cursor-pointer z-20 hover:bg-[#00e5ff]/20 hover:text-[#00e5ff] transition-all"
+                    aria-label="Previous image"
+                  >
+                    <ChevronLeft className="w-5 h-5" />
+                  </button>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      nextSlide();
+                    }}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 w-9 h-9 flex items-center justify-center rounded-full bg-slate-900/70 backdrop-blur-sm border border-gray-850 hover:border-cyan-400 text-white cursor-pointer z-20 hover:bg-[#00e5ff]/20 hover:text-[#00e5ff] transition-all"
+                    aria-label="Next image"
+                  >
+                    <ChevronRight className="w-5 h-5" />
+                  </button>
+                </>
+              )}
+
+              {/* Current Index Indicator Label */}
+              {slideImages.length > 1 && (
+                <span className="absolute bottom-4 right-4 z-20 bg-slate-950/80 backdrop-blur-xs border border-gray-800 text-gray-300 px-3 py-1 rounded-lg text-[11px] font-mono select-none">
+                  <span className="text-[#00e5ff] font-bold">{String(activeSlide + 1).padStart(2, '0')}</span> / {String(slideImages.length).padStart(2, '0')}
+                </span>
+              )}
+
+              {/* Sliding Bottom Progress Bar indicator */}
+              {slideImages.length > 1 && (
+                <div className="absolute bottom-0 left-0 right-0 h-1 bg-gray-950/40 z-20">
+                  <div 
+                    className="h-full bg-gradient-to-r from-cyan-400 to-[#7c3aed] transition-all duration-300"
+                    style={{ width: `${((activeSlide + 1) / slideImages.length) * 100}%` }}
+                  />
+                </div>
+              )}
             </div>
+
+            {/* Micro Thumbnails Carousel */}
+            {slideImages.length > 1 && (
+              <div className="grid grid-cols-5 gap-2.5">
+                {slideImages.map((img, idx) => (
+                  <button
+                    key={idx}
+                    onClick={() => setActiveSlide(idx)}
+                    className={`relative aspect-square rounded-xl bg-[#090f19] border overflow-hidden cursor-pointer transition-all ${
+                      idx === activeSlide
+                        ? 'border-[#00e5ff] ring-1 ring-[#00e5ff]/30 scale-102 opacity-100 shadow-lg shadow-cyan-950/30'
+                        : 'border-gray-850 opacity-50 hover:opacity-85 hover:scale-101'
+                    }`}
+                  >
+                    <img
+                      src={img}
+                      alt={`Thumbnail ${idx + 1}`}
+                      className="w-full h-full object-cover"
+                      referrerPolicy="no-referrer"
+                    />
+                  </button>
+                ))}
+              </div>
+            )}
 
             {/* Core Badges box */}
             <div className="p-4.5 bg-[#070b13] border border-gray-800/60 rounded-xl flex items-center gap-3.5">

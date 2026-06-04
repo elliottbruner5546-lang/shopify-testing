@@ -14,6 +14,13 @@ export const productsData: Product[] = [
     reviewsCount: 48,
     badge: 'HOT',
     emoji: '📱',
+    image: 'https://images.unsplash.com/photo-1610945265064-0e34e5519bbf?auto=format&fit=crop&q=80&w=800',
+    images: [
+      'https://images.unsplash.com/photo-1610945265064-0e34e5519bbf?auto=format&fit=crop&q=80&w=800',
+      'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&q=80&w=800',
+      'https://images.unsplash.com/photo-1580910051074-3eb694886505?auto=format&fit=crop&q=80&w=800',
+      'https://images.unsplash.com/photo-1598327105666-5b89351aff97?auto=format&fit=crop&q=80&w=800'
+    ],
     gradientFrom: 'from-blue-600',
     gradientTo: 'to-indigo-900',
     description: 'The ultimate Android experience. Featuring a titanium frame, built-in S Pen, and groundbreaking Galaxy AI features. Capture unparalleled details with the 200MP quad-camera array and enjoy peak mobile performance with the custom Snapdragon 8 Gen 4 processor.',
@@ -75,6 +82,13 @@ export const productsData: Product[] = [
     reviewsCount: 36,
     badge: 'SALE',
     emoji: '🎧',
+    image: 'https://images.unsplash.com/photo-1600294037681-c80b4cb5b434?auto=format&fit=crop&q=80&w=800',
+    images: [
+      'https://images.unsplash.com/photo-1600294037681-c80b4cb5b434?auto=format&fit=crop&q=80&w=800',
+      'https://images.unsplash.com/photo-1588449668338-d134af2a3a4f?auto=format&fit=crop&q=80&w=800',
+      'https://images.unsplash.com/photo-1590658268037-6bf12165a8df?auto=format&fit=crop&q=80&w=800',
+      'https://images.unsplash.com/photo-1546435770-a3e426bf472b?auto=format&fit=crop&q=80&w=800'
+    ],
     gradientFrom: 'from-cyan-500',
     gradientTo: 'to-blue-800',
     description: 'Re-engineered for richer sound. Featuring next-level Active Noise Cancellation (ANC) up to 2x more than its predecessor, Adaptive Audio, Transparency mode, and Personalized Spatial Audio with dynamic head tracking for immersive listening.',
@@ -125,6 +139,13 @@ export const productsData: Product[] = [
     reviewsCount: 22,
     badge: 'NEW',
     emoji: '💻',
+    image: 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&q=80&w=800',
+    images: [
+      'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&q=80&w=800',
+      'https://images.unsplash.com/photo-1611186871348-b1ce696e52c9?auto=format&fit=crop&q=80&w=800',
+      'https://images.unsplash.com/photo-1496181130204-755241524eab?auto=format&fit=crop&q=80&w=800',
+      'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&q=80&w=800'
+    ],
     gradientFrom: 'from-purple-600',
     gradientTo: 'to-indigo-950',
     description: 'Supercharged by Apple M3 chip. This ultra-portable, razor-thin laptop lets you work, play, or create anywhere. Built with a robust 8-core CPU, 10-core GPU, and up to 18 hours of battery life to breeze through professional workflows.',
@@ -168,6 +189,13 @@ export const productsData: Product[] = [
     reviewsCount: 19,
     badge: 'NEW',
     emoji: '⌨️',
+    image: 'https://images.unsplash.com/photo-1587829741301-dc798b83add3?auto=format&fit=crop&q=80&w=800',
+    images: [
+      'https://images.unsplash.com/photo-1587829741301-dc798b83add3?auto=format&fit=crop&q=80&w=800',
+      'https://images.unsplash.com/photo-1595225476474-87563907a212?auto=format&fit=crop&q=80&w=800',
+      'https://images.unsplash.com/photo-1618384887929-16ec33fab9ef?auto=format&fit=crop&q=80&w=800',
+      'https://images.unsplash.com/photo-1560769629-975ec94e6a86?auto=format&fit=crop&q=80&w=800'
+    ],
     gradientFrom: 'from-emerald-500',
     gradientTo: 'to-teal-900',
     description: 'Master your flow like never before. A low-profile, high-performance wireless keyboard offering a fluid, precise, and whisper-quiet typing experience. Dynamic backlighting adapts to the room\'s lighting automatically.',
@@ -209,6 +237,13 @@ export const productsData: Product[] = [
     reviewsCount: 15,
     badge: 'HOT',
     emoji: '⌚',
+    image: 'https://images.unsplash.com/photo-1542496658-e33a6d0d50f6?auto=format&fit=crop&q=80&w=800',
+    images: [
+      'https://images.unsplash.com/photo-1542496658-e33a6d0d50f6?auto=format&fit=crop&q=80&w=800',
+      'https://images.unsplash.com/photo-1508685096489-7aacd43bd3b1?auto=format&fit=crop&q=80&w=800',
+      'https://images.unsplash.com/photo-1517502884422-41eaaced0168?auto=format&fit=crop&q=80&w=800',
+      'https://images.unsplash.com/photo-1434494878577-86c23bcb06b9?auto=format&fit=crop&q=80&w=800'
+    ],
     gradientFrom: 'from-amber-500',
     gradientTo: 'to-orange-800',
     description: 'The thinnest and largest screen Apple Watch yet. Powerful, durable, and highly intelligent health companion. Monitor your heart rate, sleep quality, blood oxygen, and workout metrics with stunning precision on the Wide-Angle OLED screen.',
@@ -250,6 +285,13 @@ export const productsData: Product[] = [
     reviewsCount: 31,
     badge: 'SALE',
     emoji: '🔊',
+    image: 'https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?auto=format&fit=crop&q=80&w=800',
+    images: [
+      'https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?auto=format&fit=crop&q=80&w=800',
+      'https://images.unsplash.com/photo-1545454675-3531b543be5d?auto=format&fit=crop&q=80&w=800',
+      'https://images.unsplash.com/photo-1589003077984-894e133dabab?auto=format&fit=crop&q=80&w=800',
+      'https://images.unsplash.com/photo-1516223725307-6f76b9ec8742?auto=format&fit=crop&q=80&w=800'
+    ],
     gradientFrom: 'from-pink-500',
     gradientTo: 'to-rose-800',
     description: 'Take the amazing power of JBL Pro Sound with you. Detailed high-frequency clarity, deep thunderous bass, and dual pump-action JBL passive radiators. Keep the party going and charging other devices with the integrated powerbank.',
@@ -292,6 +334,13 @@ export const productsData: Product[] = [
     badge: 'SALE',
     emoji: '🎧',
     image: airpodsMasterCopyImg,
+    images: [
+      airpodsMasterCopyImg,
+      'https://images.unsplash.com/photo-1588449668338-d134af2a3a4f?auto=format&fit=crop&q=80&w=800',
+      'https://images.unsplash.com/photo-1600294037681-c80b4cb5b434?auto=format&fit=crop&q=80&w=800',
+      'https://images.unsplash.com/photo-1590658268037-6bf12165a8df?auto=format&fit=crop&q=80&w=800',
+      'https://images.unsplash.com/photo-1546435770-a3e426bf472b?auto=format&fit=crop&q=80&w=800'
+    ],
     gradientFrom: 'from-violet-500',
     gradientTo: 'to-cyan-800',
     description: 'Apple AirPods Pro 2 Master Copy offers a premium audio experience with Active Noise Cancellation (ANC), a clear built-in microphone, and deep heavy bass without breaking your bank account! Made with a robust design for a look and feel identical to the original.',

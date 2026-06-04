@@ -16,6 +16,16 @@
   <!-- Main product wrapper layout -->
   <div 
     x-data="{
+      activeImage: 0,
+      images: [
+        {%- if product.images.size > 0 -%}
+          {%- for img in product.images -%}
+            '{{ img | image_url: width: 600 }}'{%- unless forloop.last -%},{%- endunless -%}
+          {%- endfor -%}
+        {%- else -%}
+          'https://images.unsplash.com/photo-1600294037681-c80b4cb5b434?auto=format&fit=crop&q=80&w=800'
+        {%- endif -%}
+      ],
       reviews: [
         { id: 1, name: 'Usman Ali', city: 'Lahore', rating: 5, date: '2026-06-02', text: 'Bhai sound quality aur heavy bass bilkul original jesi hai. Shuru me lag raha tha master copy local hogi lekin battery backup kamaal hai!' },
         { id: 2, name: 'Sarah Khan', city: 'Karachi', rating: 5, date: '2026-06-01', text: 'Highly recommended! Box was properly sealed when delivered. Fast cash on delivery.' },
@@ -68,32 +78,71 @@
     <!-- Top Product Detail layout Grid -->
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 md:gap-12 items-start relative z-10">
       
-      <!-- Left Column: Image Container -->
+      <!-- Left Column: Image Container / Slider -->
       <div class="lg:col-span-5 flex flex-col gap-4">
         <div class="relative aspect-square rounded-2xl bg-gradient-to-br from-[#0c1421] to-[#121d2e] border border-gray-800/80 flex items-center justify-center overflow-hidden shadow-inner group">
-          {%- if product.featured_image != blank -%}
-            <img
-              src="{{ product.featured_image | image_url: width: 600 }}"
-              alt="{{ product.title | escape }}"
-              class="w-full h-full object-cover relative z-10 transition-transform duration-350 group-hover:scale-105"
-            >
-          {%- else -%}
-            <!-- Premium Fallback Emoji based on title keywords -->
-            <span class="text-8.5xl filter drop-shadow-[0_15px_15px_rgba(0,229,255,0.25)] select-none">
-              {%- if product.title contains 'Watch' or product.title contains 'watch' -%}
-                ⌚
-              {%- elsif product.title contains 'Ear' or product.title contains 'Air' -%}
-                🎧
-              {%- else -%}
-                ⚡
-              {%- endif -%}
-            </span>
-          {%- endif -%}
+          <img
+            :src="images[activeImage]"
+            alt="{{ product.title | escape }}"
+            class="w-full h-full object-cover relative z-10 select-none pointer-events-none"
+          >
 
           <span class="absolute top-4 left-4 bg-rose-500/10 text-rose-450 border border-rose-500/25 text-xs font-bold px-3 py-1.5 rounded-full z-20">
             DISPATCH ACTIVE
           </span>
+
+          <!-- Left & Right Slider Edge Nav Buttons -->
+          <template x-if="images.length > 1">
+            <div>
+              <button
+                @click="activeImage = (activeImage - 1 + images.length) % images.length"
+                class="absolute left-3 top-1/2 -translate-y-1/2 w-9 h-9 flex items-center justify-center rounded-full bg-slate-900/70 backdrop-blur-sm border border-gray-850 hover:border-cyan-400 text-white cursor-pointer z-20 hover:bg-[#00e5ff]/20 hover:text-[#00e5ff] transition-all animate-fade"
+                aria-label="Previous Image"
+              >
+                ‹
+              </button>
+              <button
+                @click="activeImage = (activeImage + 1) % images.length"
+                class="absolute right-3 top-1/2 -translate-y-1/2 w-9 h-9 flex items-center justify-center rounded-full bg-slate-900/70 backdrop-blur-sm border border-gray-850 hover:border-cyan-400 text-white cursor-pointer z-20 hover:bg-[#00e5ff]/20 hover:text-[#00e5ff] transition-all animate-fade"
+                aria-label="Next Image"
+              >
+                ›
+              </button>
+
+              <!-- Index indicators overlay label -->
+              <span class="absolute bottom-4 right-4 z-20 bg-slate-950/80 backdrop-blur-xs border border-gray-850 text-gray-300 px-3 py-1 rounded-lg text-[11px] font-mono select-none">
+                <span class="text-[#00e5ff] font-bold" x-text="String(activeImage + 1).padStart(2, '0')">01</span> / <span x-text="String(images.length).padStart(2, '0')">01</span>
+              </span>
+
+              <!-- Dynamic Slider Active Highlight position line progress -->
+              <div class="absolute bottom-0 left-0 right-0 h-1 bg-gray-950/40 z-20">
+                <div 
+                  class="h-full bg-gradient-to-r from-cyan-400 to-[#7c3aed] transition-all duration-300"
+                  :style="'width: ' + (((activeImage + 1)/images.length)*100) + '%'"
+                ></div>
+              </div>
+            </div>
+          </template>
         </div>
+
+        <!-- Micro Thumbnails Carousel Grid -->
+        <template x-if="images.length > 1">
+          <div class="grid grid-cols-5 gap-2.5">
+            <template x-for="(img, idx) in images" :key="idx">
+              <button
+                @click="activeImage = idx"
+                class="relative aspect-square rounded-xl bg-[#090f19] border overflow-hidden cursor-pointer transition-all"
+                :class="idx === activeImage ? 'border-[#00e5ff] ring-1 ring-[#00e5ff]/35 opacity-100 shadow-md shadow-cyan-950/20 scale-102' : 'border-gray-850 opacity-55 hover:opacity-85'"
+              >
+                <img
+                  :src="img"
+                  alt="Thumbnail"
+                  class="w-full h-full object-cover"
+                >
+              </button>
+            </template>
+          </div>
+        </template>
 
         <!-- Safe Checked Stock banner -->
         <div class="p-4.5 bg-[#070b13] border border-gray-800/60 rounded-xl flex items-center gap-3.5">
