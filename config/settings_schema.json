@@ -1,0 +1,62 @@
+[
+  {
+    "name": "theme_info",
+    "theme_name": "TechZone Premium Dark Storefront",
+    "theme_version": "1.0.0",
+    "theme_author": "TechZone Dev Team",
+    "theme_documentation_url": "https://github.com/",
+    "theme_support_url": "https://github.com/"
+  },
+  {
+    "name": "Colors & Neon Accents",
+    "settings": [
+      {
+        "type": "color",
+        "id": "color_bg",
+        "label": "Background Color",
+        "default": "#080c10"
+      },
+      {
+        "type": "color",
+        "id": "color_text",
+        "label": "Text Color",
+        "default": "#f3f4f6"
+      },
+      {
+        "type": "color",
+        "id": "color_accent",
+        "label": "Neon Cyan Accent",
+        "default": "#00e5ff"
+      },
+      {
+        "type": "color",
+        "id": "color_purple",
+        "label": "Neon Purple Accent",
+        "default": "#7c3aed"
+      }
+    ]
+  },
+  {
+    "name": "Social Media Links",
+    "settings": [
+      {
+        "type": "text",
+        "id": "social_whatsapp",
+        "label": "WhatsApp Contact Number",
+        "default": "923001234567"
+      },
+      {
+        "type": "text",
+        "id": "social_facebook_link",
+        "label": "Facebook Page URL",
+        "default": "https://facebook.com"
+      },
+      {
+        "type": "text",
+        "id": "social_instagram_link",
+        "label": "Instagram Page URL",
+        "default": "https://instagram.com"
+      }
+    ]
+  }
+]

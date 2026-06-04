@@ -1,0 +1,166 @@
+<div 
+  x-data="{
+    globalTime: 872,
+    adOpen: false,
+    adTimer: 60,
+    copied: false,
+    formatTime(seconds) {
+      const mins = Math.floor(seconds / 60);
+      const secs = seconds % 60;
+      return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+    },
+    copyCode() {
+      navigator.clipboard.writeText('TECH500');
+      this.copied = true;
+      setTimeout(() => this.copied = false, 3000);
+      this.triggerToast('Voucher code TECH500 copied successfully!');
+    },
+    dismissAd() {
+      this.adOpen = false;
+      sessionStorage.setItem('techzone_promo_dismissed', 'true');
+    },
+    init() {
+      setInterval(() => {
+        this.globalTime = this.globalTime > 0 ? this.globalTime - 1 : 872;
+      }, 1000);
+
+      // Trigger ad pop up after 8s
+      setTimeout(() => {
+        const isDismissed = sessionStorage.getItem('techzone_promo_dismissed');
+        if (!isDismissed) {
+          this.adOpen = true;
+        }
+      }, 8000);
+
+      setInterval(() => {
+        if (this.adOpen) {
+          this.adTimer = this.adTimer > 0 ? this.adTimer - 1 : 0;
+        }
+      }, 1000);
+    }
+  }"
+  id="shopify-promo-timer-root"
+  class="relative z-50"
+>
+  <!-- Sticky midnight sales bar -->
+  <div class="bg-gradient-to-r from-[#05090f] via-[#7c3aed]/25 to-[#05090f] border-b border-[#00e5ff]/20 text-white py-2.5 px-4 text-center text-xs flex items-center justify-center gap-2.5 flex-wrap select-none relative overflow-hidden">
+    <div class="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-[#00e5ff] to-transparent"></div>
+    
+    <span class="inline-flex items-center gap-1.5 font-display font-bold text-[10px] sm:text-xs">
+      <span class="relative flex h-2 w-2">
+        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-violet-400 opacity-75"></span>
+        <span class="relative inline-flex rounded-full h-2 w-2 bg-violet-500"></span>
+      </span>
+      <span class="bg-[#7c3aed] text-white text-[10px] uppercase font-mono font-bold px-1.5 py-0.5 rounded mr-1">
+        Midnight Sale
+      </span>
+      PAKISTAN HIGH-SPEED STOCK INFLOW: Extra Rs. 500 flat discount on orders above Rs. 5,000!
+    </span>
+
+    <div class="flex items-center gap-2 font-mono bg-black/45 border border-gray-800/80 rounded-lg px-2.5 py-1 text-[#00e5ff] text-[11px] font-bold">
+      <i data-lucide="clock" class="w-3.5 h-3.5 text-[#00e5ff] animate-pulse"></i>
+      <span>SALE ENDS IN:</span>
+      <span x-text="formatTime(globalTime)">14:32</span>
+    </div>
+
+    <button 
+      @click="adOpen = true"
+      class="text-[10px] font-bold text-violet-300 underline hover:text-violet-100 uppercase font-display cursor-pointer select-none"
+    >
+      Claim Midnight Gift
+    </button>
+  </div>
+
+  <!-- Promotional Centered Ad Popup Modal -->
+  <template x-if="adOpen">
+    <div class="fixed inset-0 bg-black/85 backdrop-blur-md flex items-center justify-center p-4 z-50 overflow-y-auto">
+      <div
+        x-transition:enter="transition ease-out duration-300"
+        x-transition:enter-start="opacity-0 scale-95 translate-y-4"
+        x-transition:enter-end="opacity-100 scale-100 translate-y-0"
+        x-transition:leave="transition ease-in duration-200"
+        x-transition:leave-start="opacity-100 scale-100"
+        x-transition:leave-end="opacity-0 scale-95 translate-y-4"
+        class="bg-[#09101b] border-2 border-[#7c3aed]/50 rounded-3xl max-w-lg w-full overflow-hidden shadow-2xl relative p-6 md:p-8"
+      >
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-[#00e5ff]/5 filter blur-3xl rounded-full pointer-events-none"></div>
+
+        <!-- Close -->
+        <button
+          @click="dismissAd()"
+          class="absolute top-4 right-4 p-2 bg-black/40 hover:bg-black/80 border border-gray-800 rounded-lg text-gray-400 hover:text-white transition-colors cursor-pointer z-10"
+        >
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+
+        <div class="text-center space-y-5 relative z-10">
+          <div class="mx-auto w-16 h-16 rounded-full bg-[#7c3aed]/10 text-violet-400 flex items-center justify-center border border-[#7c3aed]/20">
+            <i data-lucide="gift" class="w-8 h-8 text-[#00e5ff] animate-bounce"></i>
+          </div>
+
+          <div class="space-y-1.5">
+            <span class="text-[#00e5ff] text-[10px] font-bold tracking-widest font-mono uppercase block">
+              EXCLUSIVE EID GADGET DROP PROMO
+            </span>
+            <h3 class="font-display font-black text-2xl md:text-3xl text-white tracking-tight leading-none">
+              Rs. 500 Off Coupon Code!
+            </h3>
+            <p class="text-gray-400 text-xs max-w-xs mx-auto leading-relaxed">
+              Order details submit krty waqt niche diye gaye voucher code ko lgaen aur <strong class="text-white font-medium">Rs.500 ki bachat</strong> hasil karein.
+            </p>
+          </div>
+
+          <div class="bg-[#04080f] border border-gray-800/80 rounded-2xl p-4 max-w-sm mx-auto flex flex-col items-center justify-center">
+            <span class="text-gray-500 text-[9px] font-mono uppercase tracking-wider block mb-1">
+              This instant deal voucher expires in
+            </span>
+            <div class="flex items-center gap-1.5 text-center">
+              <span class="text-rose-400 font-mono font-black text-2xl sm:text-3xl animate-pulse">00:</span>
+              <span class="text-rose-400 font-mono font-black text-2xl sm:text-3xl animate-pulse" x-text="adTimer.toString().padStart(2, '0')">60</span>
+              <span class="text-rose-300 text-xs font-semibold pl-1 font-display">seconds left!</span>
+            </div>
+            <span x-show="adTimer === 0" class="text-[10px] text-amber-400 font-semibold block mt-1">
+              ⚠️ Voucher expired but our agents will still auto-verify it for COD!
+            </span>
+          </div>
+
+          <div class="flex flex-col gap-2.5 max-w-sm mx-auto">
+            <div class="flex border border-gray-800 rounded-xl overflow-hidden bg-[#05090f]">
+              <div class="px-4 py-3 bg-[#0c1421] text-xs font-mono font-bold text-[#f3f4f6] flex items-center justify-center border-r border-gray-800 shrink-0">
+                Voucher Code:
+              </div>
+              <div class="flex-1 px-4 py-3 text-sm font-mono font-black tracking-widest text-[#00e5ff] flex items-center justify-center select-all">
+                TECH500
+              </div>
+              <button
+                @click="copyCode()"
+                class="bg-[#7c3aed]/80 hover:bg-[#7c3aed] text-white px-4 text-xs font-display font-bold transition-colors cursor-pointer flex items-center justify-center gap-1"
+              >
+                <span x-show="!copied">Copy</span>
+                <span x-show="copied" class="flex items-center gap-1">
+                  <i data-lucide="check" class="w-3.5 h-3.5 text-emerald-400"></i>
+                  Copied
+                </span>
+              </button>
+            </div>
+            
+            <div class="flex items-center justify-center gap-1.5 text-[10px] text-gray-500 font-mono">
+              <i data-lucide="alert-circle" class="w-3.5 h-3.5 text-cyan-400 shrink-0"></i>
+              <span>Free shipping included across Pakistan. Valid for Cash on Delivery.</span>
+            </div>
+          </div>
+
+          <div class="pt-2 border-t border-gray-850">
+            <button
+              @click="dismissAd()"
+              class="bg-[#05090f] hover:bg-[#0c1421] border border-gray-800 text-gray-300 text-xs font-semibold px-5 py-2.5 rounded-xl cursor-pointer transition-all"
+            >
+              Catalog check karein (Continue Shopping)
+            </button>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </template>
+</div>

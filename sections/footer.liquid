@@ -1,0 +1,90 @@
+<footer class="bg-[#05090f] border-t border-gray-800/80 py-12 text-sm text-gray-400" id="footer-section">
+  <!-- Newsletter sign up -->
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-10 border-b border-gray-800/60" id="newsletter-section">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+      <div class="lg:col-span-5 text-center lg:text-left">
+        <h4 class="font-display font-black text-xl text-white uppercase tracking-tight">
+          Join TechZone Drops Alert!
+        </h4>
+        <p class="text-xs text-gray-400 mt-1">Naye imports aur stock inventory clearance deals ki updates sab se pehle hasil karein.</p>
+      </div>
+      <div class="lg:col-span-7">
+        <form 
+          action="/contact#contact_form" 
+          method="post" 
+          class="flex flex-col sm:flex-row gap-3 max-w-lg mx-auto lg:mr-0"
+        >
+          <input
+            type="email"
+            name="contact[email]"
+            placeholder="Apna email darj karein..."
+            required
+            class="flex-1 bg-[#0c1421] border border-gray-800 hover:border-gray-700 focus:border-[#00e5ff] text-white text-xs px-4 py-3.5 rounded-xl outline-none transition-all placeholder-gray-500"
+          />
+          <button
+            type="submit"
+            class="bg-gradient-to-r from-neonCyan to-neonPurple hover:brightness-110 text-white font-display font-bold text-xs py-3.5 px-6 rounded-xl transition-all cursor-pointer select-none"
+          >
+            Sasti Deals Alert Payein (Subscribe)
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 grid grid-cols-1 md:grid-cols-4 gap-8">
+    <div class="space-y-4">
+      <span class="font-display font-black text-2xl tracking-tight bg-gradient-to-r from-neonCyan to-neonPurple bg-clip-text text-transparent block">
+        TechZone
+      </span>
+      <p class="text-xs text-gray-550 leading-relaxed">
+        Premium tech copy imports store of Pakistan. Delivering premium quality high speed action audio and smartwatch packs right to your door step under secure COD checks.
+      </p>
+    </div>
+
+    <div>
+      <h5 class="text-white text-xs font-bold uppercase tracking-wider mb-4">Stock Highlights</h5>
+      <ul class="space-y-2.5 text-xs">
+        <li><a href="#products-section" class="hover:text-[#00e5ff] transition-colors">AirPods Pro series</a></li>
+        <li><a href="#products-section" class="hover:text-[#00e5ff] transition-colors">Y60 Ultra Series watch</a></li>
+        <li><a href="#products-section" class="hover:text-[#00e5ff] transition-colors">Low latency gaming copies</a></li>
+        <li><a href="#products-section" class="hover:text-[#00e5ff] transition-colors">Heavy power bank earbuds</a></li>
+      </ul>
+    </div>
+
+    <div>
+      <h5 class="text-white text-xs font-bold uppercase tracking-wider mb-4">Core Support pillars</h5>
+      <ul class="space-y-2.5 text-xs">
+        <li><a href="#trust-badges" class="hover:text-[#00e5ff] transition-colors">7-Days replacement policy</a></li>
+        <li><a href="#trust-badges" class="hover:text-[#00e5ff] transition-colors">Verify before paying</a></li>
+        <li><a href="#trust-badges" class="hover:text-[#00e5ff] transition-colors">No advance payments custom</a></li>
+        <li><a href="https://wa.me/{{ settings.social_whatsapp }}" class="hover:text-[#00e5ff] transition-colors">Customer Help Desk</a></li>
+      </ul>
+    </div>
+
+    <div>
+      <h5 class="text-white text-xs font-bold uppercase tracking-wider mb-4">Lahore HQ Address</h5>
+      <p class="text-xs text-gray-450 leading-relaxed">
+        📍 TechZone distribution hub, Main Boulevard, Gulberg III, Lahore, Punjab, Pakistan.<br />
+        <span class="block mt-2">✉️ Email: order@techzone.pk</span>
+        <span class="block mt-1">📞 Phone: +92 300 1234567</span>
+      </p>
+    </div>
+  </div>
+
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-12 pt-6 border-t border-gray-800/50 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-gray-550">
+    <p>&copy; {{ 'now' | date: '%Y' }} TechZone Pakistan Inc. All wholesale rights reserved.</p>
+    <div class="flex gap-4">
+      <a href="{{ settings.social_facebook_link }}" class="hover:text-white transition-colors">Facebook</a>
+      <a href="{{ settings.social_instagram_link }}" class="hover:text-white transition-colors">Instagram</a>
+      <a href="https://wa.me/{{ settings.social_whatsapp }}" class="hover:text-white transition-colors">WhatsApp support</a>
+    </div>
+  </div>
+</footer>
+
+{% schema %}
+{
+  "name": "TechZone Footer",
+  "settings": []
+}
+{% endschema %}

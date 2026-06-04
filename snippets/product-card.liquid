@@ -1,0 +1,73 @@
+{% comment %}
+  Header styled Product grid Card rendered dynamically from Shopify collections.
+{% endcomment %}
+<div 
+  class="bg-[#090f19] border border-gray-850/80 rounded-2xl p-4.5 hover:border-[#00e5ff]/50 hover:bg-[#0b1422]/40 transition-all duration-300 group flex flex-col justify-between"
+>
+  <div>
+    <!-- Thumbnail visualizer -->
+    <div class="aspect-square bg-slate-950 rounded-xl flex items-center justify-center mb-4 relative overflow-hidden border border-gray-850 select-none">
+      {%- if product.featured_image != blank -%}
+        <img
+          src="{{ product.featured_image | image_url: width: 350 }}"
+          alt="{{ product.title | escape }}"
+          class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+        >
+      {%- else -%}
+        <span class="text-6xl filter drop-shadow select-none">⚡</span>
+      {%- endif -%}
+
+      {%- if product.compare_at_price > product.price -%}
+        <span class="absolute top-2.5 left-2.5 bg-rose-500/15 border border-rose-500/30 text-rose-450 text-[9px] font-bold tracking-wider px-2.5 py-1 rounded-md uppercase">
+          Sale Active
+        </span>
+      {%- endif -%}
+    </div>
+
+    <span class="text-[#00e5ff] text-[9px] font-extrabold tracking-widest uppercase block mb-1">
+      {{ product.vendor | default: 'Wholesale copy' }}
+    </span>
+    
+    <h4 class="text-white text-[15px] font-bold leading-tight group-hover:text-neonCyan transition-all line-clamp-2">
+      <a href="{{ product.url }}">{{ product.title }}</a>
+    </h4>
+    
+    <div class="flex items-center gap-1.5 mt-2.5 select-none">
+      <div class="text-amber-400 text-xs">★★★★★</div>
+      <span class="text-gray-500 text-[10px] font-mono">(Verified Buyers)</span>
+    </div>
+  </div>
+
+  <div>
+    <div class="flex items-baseline gap-2 mt-4 pt-3.5 border-t border-gray-850/60 w-full">
+      <span class="text-base font-extrabold text-[#00e5ff] font-mono">
+        {{ product.price | money }}
+      </span>
+      {%- if product.compare_at_price > product.price -%}
+        <span class="text-xs text-gray-500 line-through font-mono">
+          {{ product.compare_at_price | money }}
+        </span>
+        {%- assign savings = product.compare_at_price | minus: product.price | times: 100 | divided_by: product.compare_at_price -%}
+        <span class="text-[9px] font-bold text-violet-400 uppercase bg-violet-950/20 px-1.5 py-0.5 rounded border border-violet-500/10 ml-auto">
+          -{{ savings }}%
+        </span>
+      {%- endif -%}
+    </div>
+
+    <!-- CTA checkout grid -->
+    <div class="grid grid-cols-2 gap-2 mt-4">
+      <button 
+        @click="cartCount++; triggerToast('Added to Cart: {{ product.title | escape | truncate: 15 }}')"
+        class="bg-slate-900 border border-gray-800 hover:border-gray-500 text-white font-semibold text-xs py-2 px-1 rounded-lg transition-all cursor-pointer select-none"
+      >
+        Add to Cart
+      </button>
+      <a 
+        href="{{ product.url }}"
+        class="bg-[#7c3aed] text-white font-bold text-center text-xs py-2 px-1 rounded-lg hover:brightness-110 transition-all select-none"
+      >
+        View Details
+      </a>
+    </div>
+  </div>
+</div>

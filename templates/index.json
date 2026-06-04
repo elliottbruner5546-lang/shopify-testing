@@ -1,0 +1,22 @@
+{
+  "name": "Homepage",
+  "sections": {
+    "hero_banner": {
+      "type": "hero",
+      "settings": {}
+    },
+    "product_grid": {
+      "type": "product-grid",
+      "settings": {}
+    },
+    "trust_badges": {
+      "type": "trust-badges",
+      "settings": {}
+    }
+  },
+  "order": [
+    "hero_banner",
+    "product_grid",
+    "trust_badges"
+  ]
+}

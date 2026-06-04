@@ -1,0 +1,349 @@
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8" id="product-page-root">
+  <!-- Back navigation banner -->
+  <div class="mb-6 flex items-center justify-between">
+    <a
+      href="/"
+      class="inline-flex items-center gap-2 px-4 py-2.5 bg-[#0d1522] border border-gray-800 hover:border-cyan-400/50 rounded-xl text-gray-300 hover:text-white transition-all text-xs font-semibold shadow-sm group"
+    >
+      <i data-lucide="arrow-left" class="w-4 h-4 text-[#00e5ff] transition-transform group-hover:-translate-x-1"></i>
+      Kuch aur dekhein (Back to Catalog)
+    </a>
+    <span class="text-xs font-mono text-gray-500 bg-[#05090f] px-3.5 py-1.5 border border-gray-800/40 rounded-lg">
+      Category: <span class="text-gray-300 uppercase font-semibold">{{ product.type | default: 'Premium Accessories' }}</span>
+    </span>
+  </div>
+
+  <!-- Main product wrapper layout -->
+  <div 
+    x-data="{
+      reviews: [
+        { id: 1, name: 'Usman Ali', city: 'Lahore', rating: 5, date: '2026-06-02', text: 'Bhai sound quality aur heavy bass bilkul original jesi hai. Shuru me lag raha tha master copy local hogi lekin battery backup kamaal hai!' },
+        { id: 2, name: 'Sarah Khan', city: 'Karachi', rating: 5, date: '2026-06-01', text: 'Highly recommended! Box was properly sealed when delivered. Fast cash on delivery.' },
+        { id: 3, name: 'Muhammad Bilal', city: 'Islamabad', rating: 4, date: '2026-05-28', text: 'Packaging is solid. ANC does fine job filtering background noise.' }
+      ],
+      newReviewName: '',
+      newReviewCity: 'Lahore',
+      newReviewRating: 5,
+      newReviewText: '',
+      reviewSuccess: false,
+      reviewError: '',
+      submitReview() {
+        if (!this.newReviewName.trim()) {
+          this.reviewError = 'Apna naam darj karein (Name is required).';
+          return;
+        }
+        if (!this.newReviewText.trim() || this.newReviewText.trim().length < 8) {
+          this.reviewError = 'Review thoda lamba likhein (Write something helpful).';
+          return;
+        }
+        
+        // Add review
+        this.reviews.unshift({
+          id: Date.now(),
+          name: this.newReviewName.trim(),
+          city: this.newReviewCity,
+          rating: parseInt(this.newReviewRating),
+          date: new Date().toISOString().split('T')[0],
+          text: this.newReviewText.trim()
+        });
+
+        this.newReviewName = '';
+        this.newReviewText = '';
+        this.newReviewRating = 5;
+        this.reviewError = '';
+        this.reviewSuccess = true;
+        this.triggerToast('Review submitted successfully!');
+        
+        setTimeout(() => {
+          this.reviewSuccess = false;
+        }, 5000);
+      }
+    }"
+    class="bg-[#090f19] border border-gray-800/80 rounded-3xl p-6 md:p-10 shadow-xl relative overflow-hidden"
+  >
+    <!-- Glow halo behind -->
+    <div class="absolute top-0 right-0 w-96 h-96 rounded-full bg-[#7c3aed]/5 filter blur-3xl pointer-events-none"></div>
+    <div class="absolute bottom-0 left-0 w-96 h-96 rounded-full bg-[#00e5ff]/5 filter blur-3xl pointer-events-none"></div>
+
+    <!-- Top Product Detail layout Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 md:gap-12 items-start relative z-10">
+      
+      <!-- Left Column: Image Container -->
+      <div class="lg:col-span-5 flex flex-col gap-4">
+        <div class="relative aspect-square rounded-2xl bg-gradient-to-br from-[#0c1421] to-[#121d2e] border border-gray-800/80 flex items-center justify-center overflow-hidden shadow-inner group">
+          {%- if product.featured_image != blank -%}
+            <img
+              src="{{ product.featured_image | image_url: width: 600 }}"
+              alt="{{ product.title | escape }}"
+              class="w-full h-full object-cover relative z-10 transition-transform duration-350 group-hover:scale-105"
+            >
+          {%- else -%}
+            <!-- Premium Fallback Emoji based on title keywords -->
+            <span class="text-8.5xl filter drop-shadow-[0_15px_15px_rgba(0,229,255,0.25)] select-none">
+              {%- if product.title contains 'Watch' or product.title contains 'watch' -%}
+                ⌚
+              {%- elsif product.title contains 'Ear' or product.title contains 'Air' -%}
+                🎧
+              {%- else -%}
+                ⚡
+              {%- endif -%}
+            </span>
+          {%- endif -%}
+
+          <span class="absolute top-4 left-4 bg-rose-500/10 text-rose-450 border border-rose-500/25 text-xs font-bold px-3 py-1.5 rounded-full z-20">
+            DISPATCH ACTIVE
+          </span>
+        </div>
+
+        <!-- Safe Checked Stock banner -->
+        <div class="p-4.5 bg-[#070b13] border border-gray-800/60 rounded-xl flex items-center gap-3.5">
+          <div class="p-2.5 bg-cyan-950/40 text-[#00e5ff] rounded-lg">
+            <i data-lucide="shield-check" class="w-5.5 h-5.5"></i>
+          </div>
+          <div>
+            <h5 class="text-white text-xs font-semibold">100% Sealed & Checked Stock</h5>
+            <p class="text-gray-400 text-[10px] mt-0.5">Tested before dispatch. 7 days replacement guarantee apply.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Column: Descriptions & Actions -->
+      <div class="lg:col-span-7 flex flex-col">
+        <span class="text-[#00e5ff] text-xs font-extrabold tracking-widest uppercase">
+          {{ product.vendor | default: 'TECHZONE DIRECT IMPORTS' }}
+        </span>
+        <h1 class="font-display font-black text-3xl sm:text-4xl text-white mt-1 leading-tight tracking-tight shadow-sm">
+          {{ product.title | default: 'AirPods Pro 2 Premium ANC Copy' }}
+        </h1>
+
+        <!-- Rating review totals summary -->
+        <div class="flex items-center gap-2 mt-4 select-none flex-wrap">
+          <div class="flex text-amber-400 text-sm">
+            ★★★★★
+          </div>
+          <span class="text-amber-400 font-bold font-mono text-xs">5.0</span>
+          <span class="text-gray-400 border-l border-gray-800 pl-2 text-xs">
+            Verified Customers (100% positive reviews)
+          </span>
+          <span class="text-emerald-400 text-[10px] font-mono font-bold px-2.5 py-1 rounded bg-emerald-500/10 border border-emerald-500/20 ml-auto select-none">
+            VERIFIED IN LAHORE WAREHOUSE
+          </span>
+        </div>
+
+        <p class="text-gray-300 text-sm md:text-base mt-6 leading-relaxed bg-[#0d1522]/30 border border-gray-800/30 p-5 rounded-2xl">
+          {{ product.description | default: 'Direct custom copy manufactured globally. Features pure noise reduction filter layers, dynamic sound EQ, extra silicon ears comfort drops inside box, and lightning speed backup capacity!' }}
+        </p>
+
+        <!-- Pricing with savings calculator -->
+        <div class="bg-[#05090f] border border-gray-800/60 p-6 rounded-2xl mt-6 flex items-center justify-between gap-4 flex-wrap">
+          <div class="flex flex-col">
+            <span class="text-gray-500 text-[9px] font-semibold tracking-wider uppercase">DELIVERY CHARGES COMPLETE FREE (COD ON DELIVERY)</span>
+            <div class="flex items-baseline gap-3 mt-1.5">
+              <span class="text-3xl sm:text-4xl font-black text-[#00e5ff] tracking-tight">
+                {{ product.price | money | default: 'Rs. 2,499' }}
+              </span>
+              {%- if product.compare_at_price > product.price -%}
+                <span class="text-xs sm:text-sm font-mono line-through text-gray-500">
+                  {{ product.compare_at_price | money }}
+                </span>
+              {%- endif -%}
+            </div>
+          </div>
+
+          <div class="bg-[#7c3aed]/10 text-violet-400 border border-[#7c3aed]/20 px-4.5 py-2.5 rounded-xl text-center flex flex-col justify-center select-none">
+            <span class="text-[9px] font-bold tracking-wider uppercase">SPECIAL SAVE</span>
+            <span class="text-lg font-black leading-tight">UP TO 50% OFF</span>
+          </div>
+        </div>
+
+        <!-- CTA Checkout Actions -->
+        <div class="flex flex-wrap gap-4 mt-6">
+          <a
+            href="https://wa.me/{{ settings.social_whatsapp }}?text=As सलाम o Alaikum TechZone. I want to order {{ product.title | url_encode }} for {{ product.price | money_without_currency }}"
+            target="_blank"
+            class="flex-1 min-w-[200px] bg-gradient-to-r from-[#00e5ff] to-[#7c3aed] hover:brightness-110 text-white font-black text-sm py-4.5 rounded-xl flex items-center justify-center gap-2 transition-all shadow-lg active:scale-98 select-none"
+          >
+            Abhi Order Karein (Instant WhatsApp COD)
+          </a>
+          
+          <button
+            @click="cartCount++; triggerToast('Product added to checkout cart!')"
+            class="bg-[#05090f] border border-gray-800 hover:border-gray-600 hover:bg-[#0c1421] text-white font-bold text-sm py-4.5 px-6 rounded-xl flex items-center justify-center gap-2.5 transition-all active:scale-98 cursor-pointer select-none"
+          >
+            <i data-lucide="shopping-cart" class="w-4.5 h-4.5 text-[#00e5ff]"></i>
+            Cart me Dalein
+          </button>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Specifications features grid -->
+    <div class="mt-12 border-t border-gray-800/65 pt-9">
+      <h3 class="font-display font-extrabold text-xl text-white mb-5 flex items-center gap-2 select-none">
+        <span class="w-1.5 h-5 bg-[#00e5ff] rounded-full"></span>
+        Device Features & Specifications
+      </h3>
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-5">
+        <div class="bg-[#05090f] border border-gray-850 p-4.5 rounded-xl">
+          <span class="text-[#00e5ff] uppercase text-[9px] font-extrabold tracking-widest block select-none">BATTERY LIFE</span>
+          <p class="text-gray-200 text-xs md:text-sm font-medium mt-1">Up to 36 hours total play backup</p>
+        </div>
+        <div class="bg-[#05090f] border border-gray-850 p-4.5 rounded-xl">
+          <span class="text-[#00e5ff] uppercase text-[9px] font-extrabold tracking-widest block select-none">CONNECTIVITY</span>
+          <p class="text-gray-200 text-xs md:text-sm font-medium mt-1">Bluetooth 5.3 instant autosync</p>
+        </div>
+        <div class="bg-[#05090f] border border-gray-850 p-4.5 rounded-xl">
+          <span class="text-[#00e5ff] uppercase text-[9px] font-extrabold tracking-widest block select-none">SOUND RANGE</span>
+          <p class="text-gray-200 text-xs md:text-sm font-medium mt-1">HIFI Sound with 3D Spatial ANC active</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Ratings Summary Panel & Pakistan customer reviews -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 mt-12 border-t border-gray-800/65 pt-9 relative">
+      
+      <!-- Review Submit Form -->
+      <div class="lg:col-span-4 flex flex-col gap-6">
+        <div class="bg-[#05090f] border border-gray-800/40 p-6 rounded-2xl select-none">
+          <h4 class="font-display font-extrabold text-white text-base">Ratings Summary</h4>
+          <div class="flex items-baseline gap-2 mt-4">
+            <span class="text-4xl font-black text-white font-mono">5.0</span>
+            <span class="text-gray-500 font-mono text-sm">/ 5.0</span>
+          </div>
+          <div class="text-amber-400 mt-1">★★★★★</div>
+          <span class="text-gray-500 text-[10px] block mt-1.5 leading-relaxed">Calculated based on verified countrywide orders delivered.</span>
+        </div>
+
+        <div class="bg-[#05090f] border border-gray-800/40 p-6 rounded-2xl">
+          <h4 class="font-display font-extrabold text-white text-sm uppercase tracking-wider mb-1 flex items-center gap-1.5 select-none">
+            <i data-lucide="plus" class="w-4 h-4 text-[#00e5ff]"></i>
+            Write a verified Review
+          </h4>
+          <p class="text-gray-400 text-[11px] mb-4.5 select-none">Apna feedback share karein. It helps other shoppers make decisions!</p>
+
+          <form @submit.prevent="submitReview()" class="space-y-3.5">
+            <template x-if="reviewSuccess">
+              <div class="p-3 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-semibold rounded-xl flex items-center gap-2">
+                <i data-lucide="check-circle" class="w-4.5 h-4.5 shrink-0"></i>
+                <span>Review added! Thank you for the verified drops insight.</span>
+              </div>
+            </template>
+
+            <template x-if="reviewError">
+              <div class="p-3 bg-rose-500/10 border border-rose-500/20 text-rose-400 text-xs font-semibold rounded-xl flex items-center gap-2">
+                <i data-lucide="alert-circle" class="w-4.5 h-4.5 shrink-0"></i>
+                <span x-text="reviewError"></span>
+              </div>
+            </template>
+
+            <div>
+              <label class="block text-[11px] font-mono text-gray-400 uppercase mb-1">Your Name *</label>
+              <input
+                type="text"
+                x-model="newReviewName"
+                placeholder="Usman, Sarah, Ali..."
+                class="w-full bg-[#0c1421]/60 border border-gray-850 hover:border-gray-800 focus:border-[#00e5ff] text-white text-xs px-3.5 py-2.5 rounded-xl outline-none placeholder-gray-500"
+              />
+            </div>
+
+            <div class="grid grid-cols-2 gap-3">
+              <div>
+                <label class="block text-[11px] font-mono text-gray-400 uppercase mb-1">City *</label>
+                <select
+                  x-model="newReviewCity"
+                  class="w-full bg-[#0c1421]/60 border border-gray-850 hover:border-gray-800 focus:border-[#00e5ff] text-white text-xs px-3.5 py-2.5 rounded-xl outline-none"
+                >
+                  <option value="Lahore" class="bg-[#090f19]">Lahore</option>
+                  <option value="Karachi" class="bg-[#090f19]">Karachi</option>
+                  <option value="Islamabad" class="bg-[#090f19]">Islamabad</option>
+                  <option value="Rawalpindi" class="bg-[#090f19]">Rawalpindi</option>
+                  <option value="Faisalabad" class="bg-[#090f19]">Faisalabad</option>
+                </select>
+              </div>
+
+              <div>
+                <label class="block text-[11px] font-mono text-gray-400 uppercase mb-1">Rating *</label>
+                <select
+                  x-model="newReviewRating"
+                  class="w-full bg-[#0c1421]/60 border border-gray-850 hover:border-gray-800 focus:border-[#00e5ff] text-white text-xs px-3.5 py-2.5 rounded-xl outline-none text-amber-400 font-semibold"
+                >
+                  <option value="5" class="bg-[#090f19]">5 Stars (Perfect)</option>
+                  <option value="4" class="bg-[#090f19]">4 Stars (Very Good)</option>
+                  <option value="3" class="bg-[#090f19]">3 Stars (Good)</option>
+                </select>
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-[11px] font-mono text-gray-400 uppercase mb-1">Review Details *</label>
+              <textarea
+                x-model="newReviewText"
+                placeholder="Bhai iski deep bass aur battery kamaal hai... (Urdu/English compatible)"
+                rows="3"
+                class="w-full bg-[#0c1421]/60 border border-gray-850 hover:border-gray-800 focus:border-[#00e5ff] text-white text-xs px-3.5 py-2.5 rounded-xl outline-none placeholder-gray-500 resize-none"
+              ></textarea>
+            </div>
+
+            <button
+              type="submit"
+              class="w-full bg-gradient-to-r from-cyan-500/30 to-[#7c3aed]/30 hover:from-cyan-500/40 hover:to-[#7c3aed]/40 border border-cyan-500/30 text-white font-extrabold text-xs py-2.5 rounded-xl cursor-pointer"
+            >
+              Publish Verified Review
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <!-- Active Client Review Container -->
+      <div class="lg:col-span-8 flex flex-col">
+        <h4 class="font-display font-extrabold text-white text-lg mb-5 flex items-center gap-2 select-none">
+          <i data-lucide="message-square" class="w-5 h-5 text-[#00e5ff]"></i>
+          Customer Feedbacks
+        </h4>
+        <div class="space-y-4 max-h-[640px] overflow-y-auto pr-2">
+          
+          <template x-for="rev in reviews" :key="rev.id">
+            <div class="bg-[#05090f]/50 border border-gray-850 p-5 rounded-2xl flex flex-col gap-3.5 hover:border-gray-800 transition-colors">
+              <div class="flex items-start justify-between flex-wrap gap-2">
+                <div class="flex items-center gap-3">
+                  <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-[#00e5ff]/20 to-[#7c3aed]/20 text-[#00e5ff] border border-[#00e5ff]/10 flex items-center justify-center text-xs font-bold font-mono uppercase" x-text="rev.name.split(' ').map(n=>n[0]).join('')">
+                    UA
+                  </div>
+                  <div>
+                    <div class="flex items-center gap-2 flex-wrap">
+                      <span class="text-white text-sm font-semibold" x-text="rev.name">Usman Ali</span>
+                      <span class="text-cyan-400 text-[10px] font-bold font-mono" x-text="'('+rev.city+')'">(Lahore)</span>
+                    </div>
+                    <span class="text-emerald-400 text-[10px] font-semibold flex items-center gap-1 mt-0.5 select-none">
+                      <span>✅ Order Verified (COD Complete)</span>
+                    </span>
+                  </div>
+                </div>
+
+                <div class="flex flex-col items-end gap-1">
+                  <div class="text-amber-400 text-xs">★★★★★</div>
+                  <span class="text-[10px] text-gray-500 font-mono" x-text="rev.date">2026-06-02</span>
+                </div>
+              </div>
+
+              <p class="text-gray-200 text-sm italic leading-relaxed pl-1" x-text="'&ldquo;' + rev.text + '&rdquo;'">
+                "Bhai sound quality aur heavy bass bilkul original jesi hai..."
+              </p>
+            </div>
+          </template>
+
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Main Product Section",
+  "settings": []
+}
+{% endschema %}
