@@ -1,0 +1,6 @@
+{
+  "name": "TechZone.pk",
+  "description": "Premium Pakistani tech products store featuring premium gadgets, Cash on Delivery, and authentic customer reviews.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
