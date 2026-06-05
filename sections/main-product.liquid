@@ -67,6 +67,62 @@
         setTimeout(() => {
           this.reviewSuccess = false;
         }, 5000);
+      },
+      checkoutOpen: false,
+      checkoutSuccess: false,
+      checkoutSubmitting: false,
+      checkoutEmail: '',
+      checkoutFirstName: '',
+      checkoutLastName: '',
+      checkoutAddress: '',
+      checkoutApartment: '',
+      checkoutCity: 'Lahore',
+      checkoutPostalCode: '',
+      checkoutProvince: 'Punjab',
+      checkoutPhone: '',
+      checkoutErrors: {},
+      validateCheckout() {
+        this.checkoutErrors = {};
+        if (!this.checkoutEmail.trim()) {
+          this.checkoutErrors.email = 'Email address is required';
+        } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.checkoutEmail.trim())) {
+          this.checkoutErrors.email = 'Enter a valid email address';
+        }
+        if (!this.checkoutFirstName.trim()) {
+          this.checkoutErrors.firstName = 'First name is required';
+        }
+        if (!this.checkoutLastName.trim()) {
+          this.checkoutErrors.lastName = 'Last name is required';
+        }
+        if (!this.checkoutAddress.trim()) {
+          this.checkoutErrors.address = 'Street address is required';
+        }
+        if (!this.checkoutCity.trim()) {
+          this.checkoutErrors.city = 'City is required';
+        }
+        if (!this.checkoutPostalCode.trim()) {
+          this.checkoutErrors.postalCode = 'Postal code is required';
+        } else if (this.checkoutPostalCode.trim().length < 4) {
+          this.checkoutErrors.postalCode = 'Enter standard 4 or 5 digit postal code';
+        }
+        if (!this.checkoutProvince) {
+          this.checkoutErrors.province = 'Province is required';
+        }
+        if (!this.checkoutPhone.trim()) {
+          this.checkoutErrors.phone = 'Phone number is required';
+        } else if (!/^((\+92|0|92)[3][0-9]{9})$/.test(this.checkoutPhone.replace(/[\s-]/g, ''))) {
+          this.checkoutErrors.phone = 'Enter valid Pakistani mobile number (e.g. 03001234567)';
+        }
+        return Object.keys(this.checkoutErrors).length === 0;
+      },
+      submitCheckout() {
+        if (!this.validateCheckout()) return;
+        this.checkoutSubmitting = true;
+        setTimeout(() => {
+          this.checkoutSubmitting = false;
+          this.checkoutSuccess = true;
+          this.triggerToast('Order placed successfully! 🚀');
+        }, 1200);
       }
     }"
     class="bg-[#090f19] border border-gray-800/80 rounded-3xl p-6 md:p-10 shadow-xl relative overflow-hidden"
@@ -207,13 +263,12 @@
 
         <!-- CTA Checkout Actions -->
         <div class="flex flex-wrap gap-4 mt-6">
-          <a
-            href="https://wa.me/{{ settings.social_whatsapp }}?text=As सलाम o Alaikum TechZone. I want to order {{ product.title | url_encode }} for {{ product.price | money_without_currency }}"
-            target="_blank"
-            class="flex-1 min-w-[200px] bg-gradient-to-r from-[#00e5ff] to-[#7c3aed] hover:brightness-110 text-white font-black text-sm py-4.5 rounded-xl flex items-center justify-center gap-2 transition-all shadow-lg active:scale-98 select-none"
+          <button
+            @click="checkoutOpen = true"
+            class="flex-1 min-w-[200px] bg-gradient-to-r from-[#00e5ff] to-[#7c3aed] hover:brightness-110 text-white font-black text-sm py-4.5 rounded-xl flex items-center justify-center gap-2 transition-all shadow-lg active:scale-98 cursor-pointer select-none"
           >
-            Abhi Order Karein (Instant WhatsApp COD)
-          </a>
+            Buy It Now
+          </button>
           
           <button
             @click="cartCount++; triggerToast('Product added to checkout cart!')"
@@ -386,6 +441,349 @@
       </div>
 
     </div>
+
+    <!-- Premium Alpine-powered Cash on Delivery (COD) Checkout Modal -->
+    <template x-if="checkoutOpen">
+      <div 
+        class="fixed inset-0 z-50 overflow-y-auto bg-black/75 flex items-center justify-center p-4 text-slate-800" 
+        id="shopify-checkout-modal-overlay"
+        @keydown.escape.window="checkoutOpen = false"
+      >
+        <div 
+          class="relative w-full max-w-[1100px] bg-white rounded-2xl shadow-2xl overflow-hidden flex flex-col md:flex-row h-[90vh] md:h-[85vh] animate-fade"
+          @click.away="checkoutOpen = false"
+        >
+          <!-- Close Button -->
+          <button
+            @click="checkoutOpen = false"
+            class="absolute top-4 right-4 z-35 p-1.5 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 transition-colors cursor-pointer"
+            aria-label="Close Checkout"
+          >
+            <i data-lucide="x" class="w-5 h-5"></i>
+          </button>
+
+          <!-- Left Side: Shopify Checkout Form -->
+          <div class="w-full md:w-[60%] p-6 md:p-8 overflow-y-auto h-full bg-white flex flex-col justify-between">
+            <div class="mb-5 flex items-center gap-1.5">
+              <span class="font-extrabold text-lg text-slate-900 tracking-tight">TechZone</span>
+              <span class="text-[10px] bg-slate-900 text-white font-bold px-1 py-0.5 rounded uppercase select-none">.pk</span>
+            </div>
+
+            <!-- Success screen -->
+            <template x-if="checkoutSuccess">
+              <div class="flex flex-col items-center justify-center py-6 text-center flex-1 gap-4">
+                <div class="w-16 h-16 rounded-full bg-emerald-100 border border-emerald-300 text-emerald-600 flex items-center justify-center mb-1 shadow">
+                  <i data-lucide="check" class="w-8 h-8"></i>
+                </div>
+                <p class="text-xs text-blue-600 font-bold uppercase tracking-widest font-mono">Order Thank you!</p>
+                <h3 class="font-display font-black text-2.5xl text-slate-900 tracking-tight">Order Confirmed!</h3>
+                <p class="text-slate-650 text-[14px] leading-relaxed max-w-sm px-2">
+                  Thank you for shopping with <strong class="text-slate-900">TechZone.pk</strong>. <br />
+                  Our team in Lahore will contact you shortly on WhatsApp/Call to verify your COD shipment details.
+                </p>
+
+                <div class="bg-slate-50 p-5 rounded-xl text-left w-full max-w-md mt-4 space-y-3 text-slate-700 border border-slate-200">
+                  <div>
+                    <span class="text-[10px] text-slate-400 font-bold uppercase tracking-wider block">Ship To:</span>
+                    <span class="text-slate-900 text-[13px] font-bold block mt-0.5" x-text="checkoutFirstName + ' ' + checkoutLastName"></span>
+                  </div>
+                  <div>
+                    <span class="text-[10px] text-slate-400 font-bold uppercase tracking-wider block">Phone Number / Contact:</span>
+                    <span class="text-slate-700 text-[13px] block mt-0.5" x-text="checkoutPhone"></span>
+                  </div>
+                  <div>
+                    <span class="text-[10px] text-slate-400 font-bold uppercase tracking-wider block">Address of Delivery:</span>
+                    <span class="text-slate-700 text-[13px] block mt-0.5" x-text="checkoutAddress + (checkoutApartment ? ' (' + checkoutApartment + ')' : '')"></span>
+                    <span class="text-slate-700 text-[13px] font-semibold block mt-0.5" x-text="checkoutCity + ', ' + checkoutProvince"></span>
+                  </div>
+                  <div class="border-t border-slate-250 pt-3 flex justify-between text-xs font-mono font-bold text-slate-400">
+                    <span>PAYMENT MODE:</span>
+                    <span class="text-slate-900 font-bold">CASH ON DELIVERY (COD)</span>
+                  </div>
+                </div>
+
+                <button
+                  @click="checkoutOpen = false; checkoutSuccess = false"
+                  class="mt-6 w-full max-w-md bg-[#0c65e6] hover:bg-[#0b5cd1] text-white font-semibold text-[15px] py-4 rounded-lg transition-all duration-150 flex items-center justify-center gap-2 cursor-pointer shadow"
+                >
+                  Continue Shopping
+                </button>
+              </div>
+            </template>
+
+            <!-- Checkout Form screen -->
+            <template x-if="!checkoutSuccess">
+              <form @submit.prevent="submitCheckout()" class="space-y-6">
+                
+                <!-- Contact Section -->
+                <div>
+                  <div class="flex justify-between items-center mb-2">
+                    <h3 class="text-[16px] font-semibold text-slate-950">Contact</h3>
+                    <span class="text-xs text-slate-550 underline cursor-pointer hover:text-slate-900">Sign in</span>
+                  </div>
+                  
+                  <div class="relative">
+                    <input
+                      type="email"
+                      x-model="checkoutEmail"
+                      placeholder="Email"
+                      class="w-full border rounded-lg px-4 py-3 text-[14px] text-slate-800 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all placeholder:text-slate-400"
+                      :class="checkoutErrors.email ? 'border-red-500 bg-red-50/10' : 'border-slate-350 bg-white'"
+                    />
+                  </div>
+                  <template x-if="checkoutErrors.email">
+                    <p class="text-red-500 text-[11px] font-medium mt-1" x-text="checkoutErrors.email"></p>
+                  </template>
+
+                  <label class="flex items-center gap-2 mt-3 cursor-pointer select-none">
+                    <input
+                      type="checkbox"
+                      checked
+                      class="rounded border-slate-300 text-blue-600 focus:ring-blue-500 h-4.5 w-4.5"
+                    />
+                    <span class="text-[13px] text-slate-650 font-medium select-none">Email me with news and offers</span>
+                  </label>
+                </div>
+
+                <!-- Payment Block -->
+                <div>
+                  <h3 class="text-[16px] font-semibold text-slate-950 mb-1.5">Payment</h3>
+                  <p class="text-[12px] text-slate-550 mb-3">All transactions are secure and encrypted.</p>
+                  
+                  <div class="border border-blue-600 bg-blue-50/5 rounded-xl overflow-hidden">
+                    <div class="p-3.5 bg-blue-50/20 border-b border-blue-100 flex items-center justify-between">
+                      <div class="flex items-center gap-3">
+                        <div class="h-5.5 w-5.5 rounded-full border-[5px] border-blue-600 bg-white"></div>
+                        <span class="text-[14px] font-semibold text-slate-900">Cash on Delivery (COD)</span>
+                      </div>
+                    </div>
+                    <div class="p-4 bg-slate-50 text-[13px] text-slate-650">
+                      Pay when rider delivers the order on your doorstep.
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Billing address -->
+                <div>
+                  <h3 class="text-[16px] font-semibold text-slate-950 mb-4">Billing address</h3>
+                  
+                  <div class="space-y-3">
+                    <!-- Country -->
+                    <div>
+                      <label class="block text-[11px] font-medium text-slate-500 uppercase tracking-wider mb-1">Country/Region</label>
+                      <select
+                        disabled
+                        class="w-full bg-slate-50 border border-slate-200 text-slate-700 rounded-lg px-3.5 py-3 text-[14px] outline-none cursor-not-allowed"
+                      >
+                        <option>Pakistan</option>
+                      </select>
+                    </div>
+
+                    <!-- First / Last Name -->
+                    <div class="grid grid-cols-2 gap-3">
+                      <div>
+                        <input
+                          type="text"
+                          x-model="checkoutFirstName"
+                          placeholder="First name"
+                          class="w-full border rounded-lg px-3.5 py-3 text-[14px] text-slate-800 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all placeholder:text-slate-400"
+                          :class="checkoutErrors.firstName ? 'border-red-500' : 'border-slate-350'"
+                        />
+                        <template x-if="checkoutErrors.firstName">
+                          <p class="text-red-500 text-[11px] font-medium mt-1" x-text="checkoutErrors.firstName"></p>
+                        </template>
+                      </div>
+                      <div>
+                        <input
+                          type="text"
+                          x-model="checkoutLastName"
+                          placeholder="Last name"
+                          class="w-full border rounded-lg px-3.5 py-3 text-[14px] text-slate-800 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all placeholder:text-slate-400"
+                          :class="checkoutErrors.lastName ? 'border-red-500' : 'border-slate-350'"
+                        />
+                        <template x-if="checkoutErrors.lastName">
+                          <p class="text-red-500 text-[11px] font-medium mt-1" x-text="checkoutErrors.lastName"></p>
+                        </template>
+                      </div>
+                    </div>
+
+                    <!-- Address -->
+                    <div>
+                      <input
+                        type="text"
+                        x-model="checkoutAddress"
+                        placeholder="Address"
+                        class="w-full border rounded-lg px-3.5 py-3 text-[14px] text-slate-800 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all placeholder:text-slate-400"
+                        :class="checkoutErrors.address ? 'border-red-500' : 'border-slate-350'"
+                      />
+                      <template x-if="checkoutErrors.address">
+                        <p class="text-red-500 text-[11px] font-medium mt-1" x-text="checkoutErrors.address"></p>
+                      </template>
+                    </div>
+
+                    <!-- Apartment -->
+                    <div>
+                      <input
+                        type="text"
+                        x-model="checkoutApartment"
+                        placeholder="Apartment, suite, etc. (optional)"
+                        class="w-full border border-slate-350 rounded-lg px-3.5 py-3 text-[14px] text-slate-800 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all placeholder:text-slate-400"
+                      />
+                    </div>
+
+                    <!-- City & Postal code (main compulsory items) -->
+                    <div class="grid grid-cols-2 gap-3">
+                      <div>
+                        <select
+                          x-model="checkoutCity"
+                          class="w-full border border-slate-350 rounded-lg px-3.5 py-3 text-[14px] text-slate-800 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
+                        >
+                          <option value="Lahore">Lahore</option>
+                          <option value="Karachi">Karachi</option>
+                          <option value="Islamabad">Islamabad</option>
+                          <option value="Rawalpindi">Rawalpindi</option>
+                          <option value="Faisalabad">Faisalabad</option>
+                          <option value="Multan">Multan</option>
+                          <option value="Peshawar">Peshawar</option>
+                          <option value="Quetta">Quetta</option>
+                          <option value="Sialkot">Sialkot</option>
+                          <option value="Gujranwala">Gujranwala</option>
+                          <option value="Hyderabad">Hyderabad</option>
+                        </select>
+                        <template x-if="checkoutErrors.city">
+                          <p class="text-red-500 text-[11px] font-medium mt-1" x-text="checkoutErrors.city"></p>
+                        </template>
+                      </div>
+                      <div>
+                        <input
+                          type="text"
+                          x-model="checkoutPostalCode"
+                          placeholder="Postal Code *"
+                          class="w-full border rounded-lg px-3.5 py-3 text-[14px] text-slate-800 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all placeholder:text-slate-400"
+                          :class="checkoutErrors.postalCode ? 'border-red-500' : 'border-slate-350'"
+                        />
+                        <template x-if="checkoutErrors.postalCode">
+                          <p class="text-red-500 text-[11px] font-medium mt-1" x-text="checkoutErrors.postalCode"></p>
+                        </template>
+                      </div>
+                    </div>
+
+                    <!-- Province Selector (Compulsory as requested) -->
+                    <div>
+                      <label class="block text-[11px] font-medium text-slate-500 uppercase tracking-wider mb-1">Province *</label>
+                      <select
+                        x-model="checkoutProvince"
+                        class="w-full border border-slate-350 rounded-lg px-3.5 py-3 text-[14px] text-slate-800 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
+                      >
+                        <option value="Punjab">Punjab</option>
+                        <option value="Sindh">Sindh</option>
+                        <option value="Khyber Pakhtunkhwa">Khyber Pakhtunkhwa</option>
+                        <option value="Balochistan">Balochistan</option>
+                        <option value="Islamabad Capital Territory">Islamabad Capital Territory</option>
+                        <option value="Azad Jammu & Kashmir">Azad Jammu & Kashmir</option>
+                        <option value="Gilgit-Baltistan">Gilgit-Baltistan</option>
+                      </select>
+                      <template x-if="checkoutErrors.province">
+                        <p class="text-red-500 text-[11px] font-medium mt-1" x-text="checkoutErrors.province"></p>
+                      </template>
+                    </div>
+
+                    <!-- Phone Input (Compulsory as requested) -->
+                    <div>
+                      <input
+                        type="tel"
+                        x-model="checkoutPhone"
+                        placeholder="Phone Number * (e.g. 03001234567)"
+                        class="w-full border rounded-lg px-3.5 py-3 text-[14px] text-slate-800 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all placeholder:text-slate-400"
+                        :class="checkoutErrors.phone ? 'border-red-500' : 'border-slate-350'"
+                      />
+                      <template x-if="checkoutErrors.phone">
+                        <p class="text-red-500 text-[11px] font-medium mt-1" x-text="checkoutErrors.phone"></p>
+                      </template>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Complete Order Buttons -->
+                <div class="pt-4 border-t border-slate-100">
+                  <button
+                    type="submit"
+                    :disabled="checkoutSubmitting"
+                    class="w-full bg-[#0c65e6] hover:bg-[#0b5cd1] text-white font-semibold text-[15px] py-4 rounded-lg transition-all duration-150 flex items-center justify-center gap-2 cursor-pointer shadow-sm shadow-blue-200/50"
+                  >
+                    <span x-show="checkoutSubmitting" class="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>
+                    <span x-show="!checkoutSubmitting">Complete order</span>
+                  </button>
+                </div>
+
+              </form>
+            </template>
+          </div>
+
+          <!-- Right Side: Order Summary Panel -->
+          <div class="w-full md:w-[40%] bg-slate-50 border-t md:border-t-0 md:border-l border-slate-100 p-6 md:p-8 flex flex-col justify-between overflow-y-auto h-full text-slate-700">
+            <div>
+              <h3 class="text-[15px] font-bold text-slate-500 tracking-wide mb-6 uppercase">Order summary</h3>
+              
+              <!-- Product Item Line -->
+              <div class="flex gap-4 items-center justify-between pb-4 border-b border-slate-200/65">
+                <div class="flex items-center gap-3.5">
+                  <div class="relative w-15 h-15 bg-white border border-slate-200 rounded-xl flex items-center justify-center p-1">
+                    <img
+                      :src="images[0]"
+                      alt="{{ product.title | escape }}"
+                      class="w-full h-full object-contain rounded-lg"
+                    />
+                    <!-- Shopify Circular Quantity Badge -->
+                    <span class="absolute -top-1.5 -right-1.5 h-5 w-5 bg-slate-800 text-white text-[11px] font-bold rounded-full flex items-center justify-center shadow">
+                      1
+                    </span>
+                  </div>
+                  <div>
+                    <h4 class="text-[14px] font-bold text-slate-900 leading-tight">
+                      {{ product.title }}
+                    </h4>
+                    <p class="text-[11px] text-slate-500 font-medium font-mono mt-0.5">Brand: TechZone</p>
+                  </div>
+                </div>
+                <span class="text-[14px] font-semibold text-slate-850 font-mono">
+                  {{ product.price | money }}
+                </span>
+              </div>
+
+              <!-- Costs -->
+              <div class="space-y-3.5 py-5 border-b border-slate-200/65 text-[13px] text-slate-600">
+                <div class="flex justify-between">
+                  <span>Subtotal</span>
+                  <span class="font-mono text-slate-800 font-medium">{{ product.price | money }}</span>
+                </div>
+                <div class="flex justify-between items-center">
+                  <span>Shipping</span>
+                  <span class="text-[11px] font-bold text-emerald-600 bg-emerald-50 px-2.5 py-1 rounded-full uppercase">Free</span>
+                </div>
+                <div class="flex justify-between">
+                  <span>Taxes & Duties</span>
+                  <span class="text-slate-400 italic text-[11px]">Included</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Total -->
+            <div class="pt-5 flex items-center justify-between">
+              <span class="text-[16px] font-bold text-slate-950">Total</span>
+              <div class="flex items-baseline gap-1">
+                <span class="text-[11px] text-slate-400 font-medium font-mono">PKR</span>
+                <span class="text-[22px] font-black text-slate-950 font-mono tracking-tight">
+                  {{ product.price | money_without_currency }}
+                </span>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+      </div>
+    </template>
 
   </div>
 </div>
