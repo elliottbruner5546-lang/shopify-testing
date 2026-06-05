@@ -62,7 +62,7 @@
         this.newReviewRating = 5;
         this.reviewError = '';
         this.reviewSuccess = true;
-        this.triggerToast('Review submitted successfully!');
+        triggerToast('Review submitted successfully!');
         
         setTimeout(() => {
           this.reviewSuccess = false;
@@ -121,7 +121,7 @@
         setTimeout(() => {
           this.checkoutSubmitting = false;
           this.checkoutSuccess = true;
-          this.triggerToast('Order placed successfully! 🚀');
+          triggerToast('Order placed successfully! 🚀');
         }, 1200);
       }
     }"
