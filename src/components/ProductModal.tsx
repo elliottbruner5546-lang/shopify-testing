@@ -183,7 +183,7 @@ export default function ProductModal({
                   onClick={() => onBuyNow(product)}
                   className="flex-1 min-w-[150px] bg-gradient-to-r from-[#00e5ff] to-[#7c3aed] hover:brightness-110 text-white font-display font-bold text-sm py-4 px-6 rounded-xl flex items-center justify-center gap-2 transition-all duration-200 active:scale-98 shadow-md cursor-pointer"
                 >
-                  Buy Now (Instant COD)
+                  Buy It Now
                 </button>
                 <button
                   onClick={() => onAddToCart(product, 1)}

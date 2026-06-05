@@ -337,7 +337,7 @@ export default function ProductPage({
                 onClick={() => onBuyNow(product)}
                 className="flex-1 min-w-[200px] bg-gradient-to-r from-[#00e5ff] to-[#7c3aed] hover:brightness-110 text-white font-display font-black text-sm py-4.5 px-6 rounded-xl flex items-center justify-center gap-2 transition-all duration-200 active:scale-98 shadow-lg shadow-cyan-950/10 cursor-pointer"
               >
-                Abhi Order Karein (Instant COD Order)
+                Buy It Now
               </button>
               
               <button
