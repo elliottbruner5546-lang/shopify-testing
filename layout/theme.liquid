@@ -112,6 +112,9 @@
           triggerToast(msg) {
             const event = new CustomEvent('show-toast', { detail: msg });
             window.dispatchEvent(event);
+          },
+          init() {
+            window.triggerToast = (msg) => this.triggerToast(msg);
           }
         }">
     

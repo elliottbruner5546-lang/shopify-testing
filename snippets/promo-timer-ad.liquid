@@ -13,7 +13,7 @@
       navigator.clipboard.writeText('TECH500');
       this.copied = true;
       setTimeout(() => this.copied = false, 3000);
-      triggerToast('Voucher code TECH500 copied successfully!');
+      window.triggerToast('Voucher code TECH500 copied successfully!');
     },
     dismissAd() {
       this.adOpen = false;

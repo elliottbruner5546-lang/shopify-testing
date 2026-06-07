@@ -62,7 +62,7 @@
         this.newReviewRating = 5;
         this.reviewError = '';
         this.reviewSuccess = true;
-        triggerToast('Review submitted successfully!');
+        window.triggerToast('Review submitted successfully!');
         
         setTimeout(() => {
           this.reviewSuccess = false;
@@ -121,7 +121,7 @@
         setTimeout(() => {
           this.checkoutSubmitting = false;
           this.checkoutSuccess = true;
-          triggerToast('Order placed successfully! 🚀');
+          window.triggerToast('Order placed successfully! 🚀');
         }, 1200);
       }
     }"
@@ -442,12 +442,14 @@
     </div>
 
     <!-- Premium Alpine-powered Cash on Delivery (COD) Checkout Modal -->
-    <template x-if="checkoutOpen">
-      <div 
-        class="fixed inset-0 z-50 overflow-y-auto bg-black/75 flex items-center justify-center p-4 text-slate-800" 
-        id="shopify-checkout-modal-overlay"
-        @keydown.escape.window="checkoutOpen = false"
-      >
+    <div 
+      x-show="checkoutOpen"
+      x-transition
+      style="display: none;"
+      class="fixed inset-0 z-50 overflow-y-auto bg-black/75 flex items-center justify-center p-4 text-slate-800" 
+      id="shopify-checkout-modal-overlay"
+      @keydown.escape.window="checkoutOpen = false"
+    >
         <div 
           class="relative w-full max-w-[1100px] bg-white rounded-2xl shadow-2xl overflow-hidden flex flex-col md:flex-row h-[90vh] md:h-[85vh] animate-fade"
           @click.away="checkoutOpen = false"
@@ -782,7 +784,7 @@
 
         </div>
       </div>
-    </template>
+    </div>
 
   </div>
 </div>
