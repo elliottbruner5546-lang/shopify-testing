@@ -118,11 +118,78 @@
       submitCheckout() {
         if (!this.validateCheckout()) return;
         this.checkoutSubmitting = true;
-        setTimeout(() => {
+        
+        // 1. Get current Shopify product variant ID
+        const variantId = "{{ product.selected_or_first_available_variant.id }}";
+        if (!variantId || variantId === "") {
+          window.triggerToast('Error: Product variant not found.');
+          this.checkoutSubmitting = false;
+          return;
+        }
+
+        // 2. Clear old item and add current product variant to Shopify Cart AJAX
+        fetch('/cart/clear.js', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' }
+        })
+        .then(() => {
+          return fetch('/cart/add.js', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              items: [{
+                id: parseInt(variantId),
+                quantity: 1
+              }]
+            })
+          });
+        })
+        .then(res => res.json())
+        .then(() => {
+          // 3. Submit as Contact Form Lead in the background so the merchant receives instant lead details in Customers
+          const formData = new FormData();
+          formData.append('form_type', 'contact');
+          formData.append('utf8', '✓');
+          formData.append('contact[email]', this.checkoutEmail);
+          formData.append('contact[first_name]', this.checkoutFirstName);
+          formData.append('contact[last_name]', this.checkoutLastName);
+          formData.append('contact[phone]', this.checkoutPhone);
+          formData.append('contact[body]', `Cash on Delivery (COD) order placement.\nProduct: {{ product.title }}\nAddress: ${this.checkoutAddress} ${this.checkoutApartment}\nCity: ${this.checkoutCity}\nProvince: ${this.checkoutProvince}\nPhone: ${this.checkoutPhone}\nTotal Cost: {{ product.price | money }}`);
+
+          return fetch('/contact', {
+            method: 'POST',
+            body: formData
+          });
+        })
+        .then(() => {
+          // 4. Construct complete pre-filled Shopify Checkout redirect URL
+          const checkoutUrl = `/checkout?` + 
+            `checkout[email]=${encodeURIComponent(this.checkoutEmail)}` +
+            `&checkout[shipping_address][first_name]=${encodeURIComponent(this.checkoutFirstName)}` +
+            `&checkout[shipping_address][last_name]=${encodeURIComponent(this.checkoutLastName)}` +
+            `&checkout[shipping_address][address1]=${encodeURIComponent(this.checkoutAddress)}` +
+            `&checkout[shipping_address][address2]=${encodeURIComponent(this.checkoutApartment)}` +
+            `&checkout[shipping_address][city]=${encodeURIComponent(this.checkoutCity)}` +
+            `&checkout[shipping_address][province]=${encodeURIComponent(this.checkoutProvince)}` +
+            `&checkout[shipping_address][phone]=${encodeURIComponent(this.checkoutPhone)}` +
+            `&checkout[shipping_address][country]=Pakistan`;
+
           this.checkoutSubmitting = false;
           this.checkoutSuccess = true;
-          window.triggerToast('Order placed successfully! 🚀');
-        }, 1200);
+          window.triggerToast('Order initiated! Redirecting to secure checkout...');
+          
+          // Delay to show success modal / toast, then redirect to finish order in 1 click
+          setTimeout(() => {
+            window.location.href = checkoutUrl;
+          }, 1500);
+        })
+        .catch(err => {
+          console.error('Error submitting order:', err);
+          this.checkoutSubmitting = false;
+          window.triggerToast('Error routing to checkout. Directing you to checkout...');
+          // Fallback redirect directly
+          window.location.href = `/checkout`;
+        });
       }
     }"
     class="bg-[#090f19] border border-gray-800/80 rounded-3xl p-6 md:p-10 shadow-xl relative overflow-hidden"
